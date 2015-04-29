@@ -227,8 +227,18 @@ public class Solution  {
     private String getPathToTarget(File f, String name) {
         File[] files = f.listFiles();
         for (File i : files) {
-            if (i.getName().equals(name)|| i.getName().equals(name + ".java")  ) {
+            if ( i.getName().equals(name + ".java")  ) {
                 return i.getPath();
+            } else if (i.getName().equals(name)) {
+                if (i.isFile()) {
+                    return i.getPath();
+                }
+
+                if (checkSrc(i)) {
+                    return i.getPath();
+                } else {
+                    return "";
+                }
             }
             else {
                 if (i.isDirectory()) {
@@ -240,6 +250,17 @@ public class Solution  {
             }
         }
         return "";
+    }
+    private boolean checkSrc(File f) {
+        File[] filesInFolder = f.listFiles();
+        boolean flag = true;
+        for (File j : filesInFolder) {
+            if (!(j.getName().matches(".+\\.java") || (j.isDirectory() && checkSrc(j)) )) {
+                flag = false;
+                break;
+            }
+        }
+        return flag;
     }
 
 
@@ -269,4 +290,5 @@ public class Solution  {
     }
 
 }
+
 
